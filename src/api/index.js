@@ -12,11 +12,8 @@ const api_url = axios.create({
     }
 })
 
-export async function loginAPI(username, password) {
-    return api_url.post("/login", {
-        username: username,
-        password: password
-    })
+export async function loginAPI(query) {
+    return api_url.post("/login", query)
 }
 
 export async function SubmitLogs(body) {

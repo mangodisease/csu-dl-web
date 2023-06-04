@@ -26,6 +26,7 @@ import {
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
 import avtar from "../../assets/images/team-2.jpg";
+import { useHistory } from "react-router-dom";
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {
@@ -255,7 +256,7 @@ function Header({
   useEffect(() => window.scrollTo(0, 0));
 
   const showDrawer = () => setVisible(true);
-
+  const history = useHistory()
   return (
     <>
       <div className="setting-drwer" onClick={showDrawer} hidden>
@@ -302,10 +303,19 @@ function Header({
           >
             {toggler}
           </Button>
-          <Link to="/sign-in" className="btn-sign-in">
+          <Button className="btn-sign-in"
+            type="link"
+            onClick={() => {
+              const confirm = window.confirm("Are you sure you want to lougout?")
+              if (confirm) {
+                localStorage.removeItem("user")
+                window.location.reload()
+              }
+            }}
+          >
             {profile}
             <span>Logout?</span>
-          </Link>
+          </Button>
         </Col>
       </Row>
     </>
