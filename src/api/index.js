@@ -23,6 +23,10 @@ export async function SubmitLogs(body) {
     return api_url.post("/submit-logs",  body)
 }
 
+export async function GetLogs(query) {
+    return api_url.post("/get-logs",  { query: query })
+}
+
 export async function ProcessID(formData){
     return axios.post(`${baseURL}/ocr`, formData, {
         headers: {

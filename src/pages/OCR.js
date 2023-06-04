@@ -265,6 +265,8 @@ export default function OCR() {
                             onFinish={async (values) => {
                                 console.log(values)
                                 values.createdAt = moment().format("MM-DD-YYYY @ hh:mm:ss a")
+                                values.date = moment().format("MM-DD-YYYY")
+                                values.time = moment().format("hh:mm:ss A")
                                 console.log(values)
                                 await SubmitLogs(values)
                                 .then(res=>{

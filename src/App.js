@@ -5,6 +5,7 @@ import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import OCR from "./pages/OCR";
+import Reports from "./pages/Reports";
 
 function App() {
   const location = useLocation()
@@ -14,7 +15,7 @@ function App() {
         <Route path="/sign-in" exact component={SignIn} />
         <Main>
           <Route exact path={["/OCR", "/"]} component={()=>{ return <OCR /> }} />
-          <Route exact path="/reports" component={()=>{ return <>On Development</>}} />
+          <Route exact path="/reports" component={()=>{ return <Reports />}} />
           <Redirect from="*" to={location.pathname}/>
         </Main>
       </Switch>
