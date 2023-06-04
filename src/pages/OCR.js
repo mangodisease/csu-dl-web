@@ -11,6 +11,7 @@ export default function OCR() {
     const [processing, setprocessing] = useState(false)
     const [submitting, setsubmitting] = useState(false)
     const [result, setresult] = useState(null)
+    const [text, settext] = useState({})
     const [form] = Form.useForm()
     const init = {
         "Name": "",
@@ -70,6 +71,7 @@ export default function OCR() {
                                         return null
                                     })
                                     console.log(text)
+                                    settext(JSON.stringify(text))
                                     setprocessing(false)
                                     /**
                                      * var formData = new FormData();
@@ -113,7 +115,7 @@ export default function OCR() {
 
                             </div>
                         )}
-
+                        {JSON.stringify(text)}
                         <Footer hidden>
                             <button onClick={() => setIsCameraOpen(true)}>Open Camera</button>
                             <button
