@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import { useState} from 'react';
 import Tesseract from 'tesseract.js';
 //import './App.css';
