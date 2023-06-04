@@ -12,12 +12,15 @@ const api_url = axios.create({
     }
 })
 
-export async function loginAPI(col, username, password) {
+export async function loginAPI(username, password) {
     return api_url.post("/login", {
-        col: col,
         username: username,
         password: password
     })
+}
+
+export async function SubmitLogs(body) {
+    return api_url.post("/submit-logs",  body)
 }
 
 export async function ProcessID(formData){
@@ -46,6 +49,21 @@ export async function Process(file){
         language: 'en'
     }
     return axios.post(`https://api.edenai.run/v2/ocr/ocr`, data, {
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+            authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYzExZTA0ZTUtNTNhMi00OTdkLWJmM2MtYjcwNWM3YWExM2E5IiwidHlwZSI6ImFwaV90b2tlbiJ9.BdpQdROQIYyAC9FP7NbshCqJi4yr1dyIVIU05CFOI-o'
+        }
+      })
+}
+
+export async function ProcessIdentity(file){
+    const data = {
+        providers: 'microsoft',
+        file_url: file,
+        language: 'en'
+    }
+    return axios.post(`https://api.edenai.run/v2/ocr/identity_parser`, data, {
         headers: {
             'Content-Type': 'application/json',
             accept: 'application/json',
