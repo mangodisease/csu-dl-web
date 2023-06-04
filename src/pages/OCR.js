@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, { Fragment, useEffect, useState } from "react";
 import { Camera } from "../camera";
 import { Root, Preview, Footer, GlobalStyle } from "./styles";
 import { Button, Col, Row, Form, notification, Input, Card } from "antd";
-import { ProcessID } from "../api";
+import { Process, ProcessID, ProcessImage } from "../api";
 
 export default function OCR() {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -25,6 +26,13 @@ export default function OCR() {
         setCardImage(undefined)
         form.setFieldsValue(init)
     }
+    function blobToBase64(blob) {
+        return new Promise((resolve, _) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      }
     useEffect(() => {
         setIsCameraOpen(true)
     },
@@ -44,6 +52,28 @@ export default function OCR() {
                                     //api process here
                                     var formData = new FormData();
                                     formData.append("file", blob, "file.png");
+                                    const file_url =  await ProcessImage(formData)
+                                    .then(res=>{
+                                        console.log(res.data)
+                                        return res.data
+                                    }).catch(err=>{
+                                        console.log(err.message)
+                                        return null
+                                    })
+                                    console.log(file_url)
+                                    const text = await Process(file_url)
+                                    .then(res=>{
+                                        console.log(res.data)
+                                        return res.data
+                                    }).catch(err=>{
+                                        console.log(err.message)
+                                        return null
+                                    })
+                                    console.log(text)
+                                    setprocessing(false)
+                                    /**
+                                     * var formData = new FormData();
+                                    formData.append("file", blob, "file.png");
                                     await ProcessID(formData)
                                     .then(res=>{
                                         console.log(res.data)
@@ -51,6 +81,7 @@ export default function OCR() {
                                     }).catch(err=>{
                                         console.log(err.message)
                                     })
+                                     */
                                     setTimeout(() => {
                                         //setprocessing(false)
                                         setresult({})

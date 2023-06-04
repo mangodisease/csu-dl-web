@@ -28,4 +28,28 @@ export async function ProcessID(formData){
       })
 }
 
-          
+export async function ProcessImage(formData){
+    return axios.post(`${baseURL}/process`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+}
+
+export async function Process(file){
+    const data = {
+        response_as_dict: true,
+        attributes_as_list: false,
+        show_original_response: false,
+        providers: 'microsoft',
+        file_url: file,
+        language: 'en'
+    }
+    return axios.post(`https://api.edenai.run/v2/ocr/ocr`, data, {
+        headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+            authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYzExZTA0ZTUtNTNhMi00OTdkLWJmM2MtYjcwNWM3YWExM2E5IiwidHlwZSI6ImFwaV90b2tlbiJ9.BdpQdROQIYyAC9FP7NbshCqJi4yr1dyIVIU05CFOI-o'
+        }
+      })
+}
