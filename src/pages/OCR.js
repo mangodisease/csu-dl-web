@@ -235,7 +235,7 @@ export default function OCR() {
             {/**Camera End */}
             <Col xs={24} style={{ marginBottom: 30 }}>
                 {
-                    !isCameraOpen || cardImage!==undefined &&
+                    !isCameraOpen &&
                     <Dragger {...props}>
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />

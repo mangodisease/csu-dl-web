@@ -3,9 +3,11 @@ import { loginAPI } from "../api";
 import { useHistory } from "react-router-dom";
 import csucc from "../assets/images/csucc.png";
 import { isMobile } from "react-device-detect";
+import { useState } from "react";
 
 export default function Login(props) {
     const {setuser} = props
+    const [loading, setloading] = useState(false)
     const history = useHistory()
     return (
         <Row gutter={[24, 5]}>
@@ -25,6 +27,7 @@ export default function Login(props) {
                     <Form
                         onFinish={async values => {
                             console.log(values)
+                            setloading(true)
                             await loginAPI(values)
                             .then(res=>{
                                 console.log(res.data)
@@ -33,9 +36,12 @@ export default function Login(props) {
                                     setuser(values)
                                     localStorage.setItem("user", JSON.stringify(values))
                                     history.push("/OCR")
+                                    
                                 }
+                                setloading(false)
                             }).catch(err=>{
                                 console.log(err.message)
+                                setloading(false)
                             })
                         }}
                         onFinishFailed={err => {
@@ -74,6 +80,7 @@ export default function Login(props) {
 
                         <Form.Item>
                             <Button
+                                loading={loading}
                                 type="primary"
                                 htmlType="submit"
                                 style={{ width: "100%" }}
