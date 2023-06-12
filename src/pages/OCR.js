@@ -14,11 +14,12 @@ export default function OCR() {
     const [uploading, setuploading] = useState(false)
     const [submitting, setsubmitting] = useState(false)
     const [okToSubmit, setokToSubmit] = useState(false)
+    const [img, setimg] = useState("")
 
     const [form] = Form.useForm()
     const init = {
         "Name": "",
-        "Nationality": "", "Sex": "", "Date_of_Birth": "",
+        "Nationality": "PHL", "Sex": "", "Date_of_Birth": "",
         "Address": "", "License_No": "", "Expiry_Date": "",
         "Plate_No": "", "Vehicle_Type": ""
     }
@@ -89,7 +90,8 @@ export default function OCR() {
         accept: "image/png, image/jpeg",
         async onChange(info) {
             const { status } = info.file;
-            info.fileList = [info.file]
+            console.log(info.file)
+            setimg(URL.createObjectURL(info.file.originFileObj))
             setuploading(true)
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
@@ -123,6 +125,7 @@ export default function OCR() {
         setsubmitting(false)
         //setIsCameraOpen(false)
         setCardImage(undefined)
+        setimg("")
         form.setFieldsValue(init)
     }
 
@@ -140,7 +143,7 @@ export default function OCR() {
     return (
         <Row gutter={[24, 5]}>
             {/**Camera Disabled*/}
-            <Col xs={24} >
+            <Col xs={24} lg={isCameraOpen? 24 : 12} >
                 <Button
                     style={{ float: "right" }}
                     onClick={() => setIsCameraOpen(true)}
@@ -160,7 +163,7 @@ export default function OCR() {
                     ❌  Use File Upload
                 </Button>
             </Col>
-            <Col xs={24}>
+            <Col xs={24} lg={isCameraOpen? 24 : 12}>
                 <Fragment>
                     <Root>
 
@@ -233,27 +236,29 @@ export default function OCR() {
                 </Fragment>
             </Col>
             {/**Camera End */}
-            <Col xs={24} style={{ marginBottom: 30 }}>
+            <Col xs={24} lg={isCameraOpen? 24 : 12} style={{ marginBottom: 30 }}>
                 {
                     !isCameraOpen &&
                     <Dragger {...props}>
-                        <p className="ant-upload-drag-icon">
+                        <p className="ant-upload-drag-icon" hidden={processing || uploading}>
                             <InboxOutlined />
                         </p>
-                        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                        <p className="ant-upload-text" hidden={processing || uploading}>{img!==""? "Re Upload Image? click or drag file" : "Click or drag file to this area to upload"}</p>
                         <p className="ant-upload-hint">
                             <Button type="link" loading={processing || uploading}>
                                 {uploading ? "Uploading Image ..." : ""}
                                 {processing ? "Processing Image ..." : ""}
                             </Button>
                         </p>
+                        <img src={img} alt="img" height={300} hidden={img===""}/>
                     </Dragger>
                 }
 
             </Col>
             {/**Form */}
+            <Col xs={24} lg={isCameraOpen? 24 : 12}>
             <center>
-                <Col xs={22} lg={18} style={{}}>
+                <Col xs={24} lg={isCameraOpen? 15 :24} style={{}}>
                     <Card
                         bordered
                         hoverable
@@ -269,16 +274,16 @@ export default function OCR() {
                                 values.time = moment().format("hh:mm:ss A")
                                 console.log(values)
                                 await SubmitLogs(values)
-                                .then(res=>{
-                                    console.log(res.data)
-                                    notification.success({ message: "Submitted Successfully!" })
-                                    clear()
-                                }).catch(err=>{
-                                    console.log(err.message)
-                                    setsubmitting(false)
-                                    notification.error({ message: "Server Error! Please try again later!" })
-                                })
-                                
+                                    .then(res => {
+                                        console.log(res.data)
+                                        notification.success({ message: "Submitted Successfully!" })
+                                        clear()
+                                    }).catch(err => {
+                                        console.log(err.message)
+                                        setsubmitting(false)
+                                        notification.error({ message: "Server Error! Please try again later!" })
+                                    })
+
                             }}
                             onFinishFailed={err => {
                                 console.log(err)
@@ -293,7 +298,7 @@ export default function OCR() {
                                 <Col xs={24}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("Name")||form.getFieldValue("Name")!==null? "success" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Name") || form.getFieldValue("Name") !== null ? "success" : ""}
                                         name="Name"
                                         label="Name"
                                         rules={[
@@ -303,10 +308,10 @@ export default function OCR() {
                                         <Input type="text" placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("Date_of_Birth")||form.getFieldValue("Date_of_Birth")!==null? "success" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Date_of_Birth") || form.getFieldValue("Date_of_Birth") !== null ? "success" : ""}
                                         name="Date_of_Birth"
                                         label="Date of Birth"
                                         rules={[
@@ -316,10 +321,10 @@ export default function OCR() {
                                         <Input type="text" placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("Sex")||form.getFieldValue("Sex")!==null? "success" : okToSubmit? "warning" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Sex") || form.getFieldValue("Sex") !== null ? "success" : okToSubmit ? "warning" : ""}
                                         name="Sex"
                                         label="Sex"
                                         rules={[
@@ -330,10 +335,10 @@ export default function OCR() {
                                     </Form.Item>
                                 </Col>
 
-                                <Col xs={24}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("Address")||form.getFieldValue("Address")!==null? "success" : okToSubmit? "warning" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Address") || form.getFieldValue("Address") !== null ? "success" : okToSubmit ? "warning" : ""}
                                         name="Address"
                                         label="Address"
                                         rules={[
@@ -343,10 +348,23 @@ export default function OCR() {
                                         <Input.TextArea type="text" placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("Expiry_Date")||form.getFieldValue("Expiry_Date")!==null? "success" : okToSubmit? "warning" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Nationality") || form.getFieldValue("Nationality") !== null ? "success" : okToSubmit ? "warning" : ""}
+                                        name="Nationality"
+                                        label="Nationality"
+                                        rules={[
+                                            { required: false, message: "Please fill in this field!" },
+                                        ]}
+                                    >
+                                        <Input type="text" placeholder="" />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
+                                    <Form.Item
+                                        hasFeedback
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("Expiry_Date") || form.getFieldValue("Expiry_Date") !== null ? "success" : okToSubmit ? "warning" : ""}
                                         name="Expiry_Date"
                                         label="Expiry Date"
                                         rules={[
@@ -356,10 +374,10 @@ export default function OCR() {
                                         <Input type="text" placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={!okToSubmit? "" : form.getFieldValue("License_No")||form.getFieldValue("License_No")!==null? "success" : okToSubmit? "warning" : ""}
+                                        validateStatus={!okToSubmit ? "" : form.getFieldValue("License_No") || form.getFieldValue("License_No") !== null ? "success" : okToSubmit ? "warning" : ""}
                                         name="License_No"
                                         label="License No."
                                         rules={[
@@ -372,10 +390,10 @@ export default function OCR() {
                                 <Col xs={24}>
                                     <hr />
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={okToSubmit? "warning" : ""}
+                                        validateStatus={okToSubmit ? "warning" : ""}
                                         name="Plate_No"
                                         label="Plate No."
                                         rules={[
@@ -385,10 +403,10 @@ export default function OCR() {
                                         <Input type="text" placeholder="" />
                                     </Form.Item>
                                 </Col>
-                                <Col xs={24} lg={12}>
+                                <Col xs={24} lg={isCameraOpen? 24 : 12}>
                                     <Form.Item
                                         hasFeedback
-                                        validateStatus={okToSubmit? "warning" : ""}
+                                        validateStatus={okToSubmit ? "warning" : ""}
                                         name="Vehicle_Type"
                                         label="Vehicle Type"
                                         rules={[
@@ -422,14 +440,14 @@ export default function OCR() {
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} style={{ marginBottom: 20 }}>
-                                {
-                                    okToSubmit&&<Alert
-                                    message="Please check the details above before submitting!"
-                                    banner
-                                    closable
+                                    {
+                                        okToSubmit && <Alert
+                                            message="Please check the details above before submitting!"
+                                            banner
+                                            closable
 
-                                />
-                                }
+                                        />
+                                    }
                                 </Col>
                                 <Col xs={24}>
                                     <Button
@@ -450,6 +468,7 @@ export default function OCR() {
                     </Card>
                 </Col>
             </center>
+            </Col>
             {/**Form End */}
             <GlobalStyle />
         </Row>

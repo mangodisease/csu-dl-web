@@ -61,7 +61,7 @@ export default function Login(props) {
                                 },
                             ]}
                         >
-                            <Input placeholder="Email" />
+                            <Input placeholder="Username" />
                         </Form.Item>
 
                         <Form.Item

@@ -24,11 +24,11 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/sign-in" exact component={()=>{ return <Login setuser={setuser}/>}} />
+        <Route path="/" exact component={()=>{ return <Login setuser={setuser}/>}} />
         <Main>
           <Route exact path={"/OCR"} component={()=>{ return <OCR /> }} />
           <Route exact path="/reports" component={()=>{ return <Reports />}} />
-          <Redirect from="*" to={user===null? "/sign-in": location.pathname}/>
+          <Redirect from="*" to={user===null? "/": location.pathname}/>
         </Main>
       </Switch>
     </div>
